@@ -1,5 +1,5 @@
-const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
 const path = require('path');
+const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
 const antdVarsPath = './src/theme/antd/vars.less';
 const CracoAntDesignPlugin = require('craco-antd');
 const { getLessVars } = require('antd-theme-generator');
@@ -44,13 +44,22 @@ module.exports = {
     {
       plugin: CracoAntDesignPlugin,
       options: {
-        customizeThemeLessPath: path.join(__dirname, antdVarsPath),
+        customizeThemeLessPath: path.join(__dirname, 'src/theme/antd/vars.less'),
       },
     },
   ],
   webpack: {
     plugins: {
       add: [themePlugin],
+    },
+    // add mjs compatibility configuration
+    configure: (webpackConfig) => {
+      webpackConfig.module.rules.push({
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      });
+      return webpackConfig;
     },
   },
 };
